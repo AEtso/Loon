@@ -11,3 +11,5 @@ IP-ASN, 59930, 美国策略
 IP-ASN, 211157, 美国策略
 IP-CIDR, 5.28.192.0/18, 欧盟策略, no-resolve
 IP-CIDR, 109.239.140.0/24, 欧盟策略, no-resolve
+
+# from @RuCu6 https://github.com/RuCu6/Loon/blob/main/Plugins/telegramdc.plugin
