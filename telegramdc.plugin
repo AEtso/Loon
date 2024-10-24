@@ -5,12 +5,12 @@
 #!date = 2024-04-29 23:55
 
 [Rule]
-IP-ASN, 62014, 新国策略, no-resolve
-IP-ASN, 62041, 欧盟策略, no-resolve
-IP-ASN, 44907, 欧盟策略, no-resolve
-IP-ASN, 59930, 美国策略, no-resolve
-IP-ASN, 211157, 美国策略, no-resolve
-IP-CIDR, 5.28.192.0/18, 欧盟策略, no-resolve
-IP-CIDR, 109.239.140.0/24, 欧盟策略, no-resolve
+IP-ASN, 62014, TG新国策略, no-resolve
+IP-ASN, 62041, TG欧盟策略, no-resolve
+IP-ASN, 44907, TG欧盟策略, no-resolve
+IP-ASN, 59930, TG美国策略, no-resolve
+IP-ASN, 211157, TG美国策略, no-resolve
+IP-CIDR, 5.28.192.0/18, TG欧盟策略, no-resolve
+IP-CIDR, 109.239.140.0/24, TG欧盟策略, no-resolve
 
 # from @RuCu6 https://github.com/RuCu6/Loon/blob/main/Plugins/telegramdc.plugin
