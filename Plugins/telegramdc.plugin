@@ -1,7 +1,7 @@
 #!name = Telegram DC
 #!desc = 电报数据中心分流。
 #!author = RuCu6[https://github.com/RuCu6]
-#!icon = https://github.com/AEtso/Loon/blob/master/Icons/telegram.png?raw=true
+#!icon = https://github.com/AEtso/Loon/blob/master/Icons/telegram.png
 #!date = 2024-04-29 23:55
 
 [Rule]
