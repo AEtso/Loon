@@ -12,6 +12,7 @@ IP-ASN, 59930, TG美国策略, no-resolve
 IP-ASN, 211157, TG美国策略, no-resolve
 IP-CIDR, 5.28.192.0/18, TG欧盟策略, no-resolve
 IP-CIDR, 109.239.140.0/24, TG欧盟策略, no-resolve
+# 大佬的防止TG加载转圈规则
 IP-CIDR,95.161.76.100/31,REJECT-NO-DROP,no-resolve
 
 
