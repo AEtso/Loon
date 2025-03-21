@@ -3,10 +3,10 @@
  * 使用说明：进入APP商品详情页面触发
  * 支持版本：App V15.0.80+
  * 脚本作者：小白脸（优化版）
- * 参考来源：[1](@ref)、[2](@ref)
+ * 参考来源：[1,5](@ref)
 */
 
-// 网络检测模块（引用自[1](@ref)的请求优化思路）
+// 网络检测模块（引用自的请求优化思路）
 const checkNetwork = async () => {
   try {
     await this.$httpClient.head("https://www.jd.com", { timeout: 5000 });
@@ -17,38 +17,50 @@ const checkNetwork = async () => {
   }
 };
 
-// 增强型HTTP请求模块（引用自[2](@ref)的油猴脚本实践）
-const http = async (op) => {
-  const maxRetries = 3;
-  let retryCount = 0;
-  
-  while(retryCount < maxRetries) {
-    try {
-      const response = await this.$httpClient.get(op, {
-        timeout: op.timeout || 120000, // 单次请求最大超时120秒
-        headers: {
-          'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
-          'accept': 'application/json',
-          'sec-fetch-site': 'same-site',
-          'sec-fetch-mode': 'navigate',
-          'sec-fetch-dest': 'document',
-          'connection': 'keep-alive'
-        },
-        followRedirects: true
-      });
+// 增强型HTTP请求模块（引用自的油猴脚本实践）
+const http = {
+  client: null,
+  
+  async init() {
+    if(!this.client) {
+      this.client = this.$httpClient || new HttpClient(); // 确保httpClient已初始化
+      this.client.timeout = 120000; // 设置默认超时
+    }
+  },
 
-      if(response.statusCode >= 200 && response.statusCode < 300) {
-        return JSON.parse(response.body);
+  async get(op) {
+    await this.init();
+    
+    const maxRetries = 3;
+    let retryCount = 0;
+    
+    while(retryCount < maxRetries) {
+      try {
+        const response = await this.client.get(op, {
+          headers: {
+            'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+            'accept': 'application/json',
+            'sec-fetch-site': 'same-site',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-dest': 'document',
+            'connection': 'keep-alive'
+          },
+          followRedirects: true
+        });
+
+        if(response.statusCode >= 200 && response.statusCode < 300) {
+          return JSON.parse(response.body);
+        }
+        
+        console.log(`HTTP状态码 ${response.statusCode}，准备重试...`);
+        retryCount++;
+        await new Promise(resolve => setTimeout(resolve, 2000 + retryCount*1000));
+      } catch(error) {
+        console.error(`请求失败：${error.message}`);
+        retryCount++;
+        if(retryCount >= maxRetries) throw error;
+        await new Promise(resolve => setTimeout(resolve, 2000 + retryCount*1000));
       }
-      
-      console.log(`HTTP状态码 ${response.statusCode}，准备重试...`);
-      retryCount++;
-      await new Promise(resolve => setTimeout(resolve, 2000 + retryCount*1000));
-    } catch(error) {
-      console.error(`请求失败：${error.message}`);
-      retryCount++;
-      if(retryCount >= maxRetries) throw error;
-      await new Promise(resolve => setTimeout(resolve, 2000 + retryCount*1000));
     }
   }
 };
@@ -80,13 +92,9 @@ const getPriceData = async () => {
     const itemId = $request.url.match(/\d+/)?.[0];
     if(!itemId) throw new Error("未找到商品ID");
 
-    const response = await http({
+    const response = await http.get({
       method: "post",
       url: "https://apapia-history.manmanbuy.com/ChromeWidgetServices/WidgetServices.ashx",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-      },
       body: JSON.stringify({
         methodName: "getHistoryTrend",
         p_url: `https://item.m.jd.com/product/${itemId}.html`,
